@@ -144,28 +144,32 @@ document.addEventListener('DOMContentLoaded', function() {
     function showErrorNotification(errorsBySection) {
         // Create a modal for better visibility
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 animate-fadeIn';
         modal.innerHTML = `
-            <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h4 class="text-xl font-bold text-red-600">Please Complete Required Fields</h4>
-                    <button class="text-gray-500 hover:text-gray-700" onclick="this.closest('.fixed').remove()">
+            <div class="bg-white rounded-lg p-8 max-w-lg w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95 hover:scale-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h4 class="text-2xl font-bold text-medico-purple">Form Validation Required</h4>
+                    <button class="text-gray-500 hover:text-gray-700 text-xl" onclick="this.closest('.fixed').remove()">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="space-y-4">
-                    <p class="text-gray-600">The following fields need your attention:</p>
-                    <div class="space-y-4">
+                <div class="space-y-6">
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
+                        <p class="text-red-700 font-medium">Please complete all required fields in the following sections:</p>
+                    </div>
+                    <div class="space-y-6">
                         ${Object.entries(errorsBySection).map(([section, fields]) => `
-                            <div>
-                                <h5 class="font-semibold text-gray-700">${section}:</h5>
-                                <ul class="list-disc list-inside text-red-600 ml-4">
+                            <div class="bg-purple-50 p-4 rounded-lg shadow-sm border border-purple-100 hover:border-purple-200 transition-colors">
+                                <h5 class="font-semibold text-medico-purple text-lg mb-2">
+                                    <i class="fas fa-exclamation-circle mr-2"></i>${section}
+                                </h5>
+                                <ul class="list-disc list-inside text-red-600 space-y-1 ml-6">
                                     ${fields.map(field => `<li>${field}</li>`).join('')}
                                 </ul>
                             </div>
                         `).join('')}
                     </div>
-                    <button class="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors" 
+                    <button class="mt-6 w-full bg-medico-purple text-white py-3 px-6 rounded-lg hover:bg-purple-800 transition-colors font-medium text-lg" 
                             onclick="this.closest('.fixed').remove()">
                         Got it
                     </button>
@@ -173,6 +177,36 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         document.body.appendChild(modal);
+        // Trigger animations after a brief delay
+        setTimeout(() => {
+            modal.classList.remove('bg-opacity-0');
+            modal.classList.add('bg-opacity-50');
+            const dialog = modal.querySelector('.bg-white');
+            dialog.classList.remove('scale-95', 'opacity-0');
+            dialog.classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        // Add close animation
+        const closeModal = (e) => {
+            const dialog = modal.querySelector('.bg-white');
+            modal.classList.remove('bg-opacity-50');
+            modal.classList.add('bg-opacity-0');
+            dialog.classList.remove('scale-100', 'opacity-100');
+            dialog.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.remove(), 300);
+        };
+
+        // Update close button click handlers
+        modal.querySelectorAll('button').forEach(button => {
+            button.onclick = closeModal;
+        });
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
 
         // Add error indicators to fields
         required.forEach(field => {
@@ -180,7 +214,8 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.forEach(element => {
                 const container = element.closest('.bg-purple-100');
                 if (container) {
-                    container.classList.add('border-l-4', 'border-red-500');
+                    container.classList.add('border-l-4', 'border-red-500', 'animate-pulse');
+                    setTimeout(() => container.classList.remove('animate-pulse'), 1000);
                 }
             });
         });
@@ -241,8 +276,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorMessage.remove();
             }
             // Add success indicator
-            this.classList.add('border-green-500');
-            setTimeout(() => this.classList.remove('border-green-500'), 1000);
+            this.classList.add('border-green-500', 'transition-all', 'duration-300');
+            this.style.backgroundColor = '#f0fdf4';
+            setTimeout(() => {
+                this.classList.remove('border-green-500');
+                this.style.backgroundColor = '';
+            }, 1000);
         });
     });
 
