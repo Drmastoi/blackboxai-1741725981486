@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Reports - Accident Questionnaire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medico-purple': '#2D1B3E',
+                        'medico-light': '#F3F4F6',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-inter">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-medico-purple text-white">
+            <div class="p-4">
+                <h1 class="text-xl font-bold mb-8">Medico Reports</h1>
+                <nav>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-home mr-2"></i>Dashboard</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-folder mr-2"></i>Case Management</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-coins mr-2"></i>Financials</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-calendar mr-2"></i>My Scheduler</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-user-tie mr-2"></i>My Solicitors</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-building mr-2"></i>My Agencies</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-clinic-medical mr-2"></i>My Clinics</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-cog mr-2"></i>My Settings</a>
+                    <a href="#" class="block py-2 px-4 hover:bg-purple-800 rounded"><i class="fas fa-question-circle mr-2"></i>Help</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Bar -->
+            <div class="bg-white p-4 shadow-sm flex justify-between items-center">
+                <div class="space-x-2">
+                    <button class="bg-medico-purple text-white px-4 py-2 rounded">GO BACK</button>
+                    <button class="bg-green-500 text-white px-4 py-2 rounded">Appointment Calendar</button>
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded">Upload Document</button>
+                </div>
+                <div>
+                    <button class="text-gray-600"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="p-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-2xl font-semibold mb-6">Add Client</h2>
+                    <form id="clientForm" class="space-y-6">
+                        <!-- Case Instructing Party -->
+                        <div class="bg-purple-100 p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-4">Case Instructing Party</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2">Agency</label>
+                                    <input type="text" name="agency" class="w-full p-2 border rounded" placeholder="Direct Instructions">
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Agency Ref</label>
+                                    <input type="text" name="agencyRef" class="w-full p-2 border rounded" placeholder="Referral Number">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Client Detail -->
+                        <div class="bg-purple-100 p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-4">Client Detail</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2">Title</label>
+                                    <select name="title" class="w-full p-2 border rounded">
+                                        <option>Mr</option>
+                                        <option>Mrs</option>
+                                        <option>Miss</option>
+                                        <option>Ms</option>
+                                        <option>Dr</option>
+                                        <option>Prof</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Gender</label>
+                                    <div class="space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="gender" class="form-radio" value="Male" required>
+                                            <span class="ml-2">Male</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="gender" class="form-radio" value="Female" required>
+                                            <span class="ml-2">Female</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Forename</label>
+                                    <input type="text" name="forename" class="w-full p-2 border rounded" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Surname</label>
+                                    <input type="text" name="surname" class="w-full p-2 border rounded" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Date of Birth</label>
+                                    <input type="date" name="dateOfBirth" class="w-full p-2 border rounded" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Corr Email</label>
+                                    <input type="email" name="email" class="w-full p-2 border rounded" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Detail -->
+                        <div class="bg-purple-100 p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-4">Contact Detail</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2">Address</label>
+                                    <input type="text" name="address" class="w-full p-2 border rounded" placeholder="Select Post Code" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Contact No</label>
+                                    <input type="tel" name="contactNo" class="w-full p-2 border rounded" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Postcode</label>
+                                    <input type="text" name="postcode" class="w-full p-2 border rounded" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Case Detail -->
+                        <div class="bg-purple-100 p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-4">Case Detail</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block mb-2">Date of Accident</label>
+                                    <input type="date" name="dateOfAccident" class="w-full p-2 border rounded" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Hospital Record Needs To Be Reviewed</label>
+                                    <div class="space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="hospital_record" value="yes">
+                                            <span class="ml-2">Yes</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="hospital_record" value="no">
+                                            <span class="ml-2">No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">GP Record Needs To Be Reviewed</label>
+                                    <div class="space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="gp_record" value="yes">
+                                            <span class="ml-2">Yes</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="gp_record" value="no">
+                                            <span class="ml-2">No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Accident Circumstances</label>
+                                    <div class="border rounded bg-white">
+                                        <div class="flex border-b p-2 bg-gray-50">
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-bold"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-italic"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-underline"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-list"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-list-ol"></i></button>
+                                        </div>
+                                        <textarea name="accidentCircumstances" class="w-full p-2 h-32" contenteditable="true"></textarea>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Any Special Note</label>
+                                    <div class="border rounded bg-white">
+                                        <div class="flex border-b p-2 bg-gray-50">
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-bold"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-italic"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-underline"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-list"></i></button>
+                                            <button type="button" class="p-1 hover:bg-gray-200 rounded"><i class="fas fa-list-ol"></i></button>
+                                        </div>
+                                        <textarea name="specialNote" class="w-full p-2 h-32" contenteditable="true"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" class="bg-medico-purple text-white px-6 py-2 rounded">
+                                Save patient detail and continue later
+                            </button>
+                            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded">
+                                Continue with report writing
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/form.js"></script>
+    <script src="js/pdf-generator.js"></script>
+</body>
+</html>
